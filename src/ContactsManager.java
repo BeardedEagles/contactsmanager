@@ -86,7 +86,6 @@ public class ContactsManager {
             System.out.print(contactList.get(key).getNumber());
             System.out.println();
         }
-
         menu();
     } // End of showItems()
 
@@ -111,51 +110,33 @@ public class ContactsManager {
 
      // End of searchContacts()
 
+
     public static void removeContacts() throws IOException {
-        boolean keepGoing=false;
+        boolean keepGoing = false;
         do {
-            Path contactsPath = Paths.get(directory, filename);
-            List<String> lines = Files.readAllLines(Paths.get(directory, filename));
             String search = Input.getString("\nWhat contact would you like to remove?\n");
-//            System.out.println(lines);
-            boolean found = false;
-            for (String str : lines) {
-                if (str.trim().contains(search)) {
-                    found = true;
-                    System.out.println(str + "\n");
-                    if(Input.yesNo("Are you sure you want to remove " + str)){
-                        lines.remove(str);
-                        lines = Files.readAllLines(Paths.get(directory, filename));
-                        System.out.println("You have removed " + str);
-                    }
+            if (contactList.containsKey(search)) {
+                Contact result = contactList.get(search);
+                System.out.println("Are you sure you would like to delete " + search + "?");
+                if(Input.yesNo()){
+                    contactList.remove(search);
+                    saveList();
+                } else {
+                    menu();
                 }
-            }
-            if (found == false) {
-                System.out.println("Sorry. There is no contact named " + search + ".\n");
-                keepGoing = Input.yesNo("\nWould you like to search for another contact?");
-            }
 
-            if (found == true){
                 keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+
+            } else {
+                System.out.println("Sorry. You don't have a contact named " + search + ".\n");
+                keepGoing = Input.yesNo("\nWould you like to remove another contact?");
             }
-        } while (keepGoing);
+        }while(keepGoing);
         menu();
-    } // End of removeContacts()
-
-
+    }
 
 
     public static void addNewContact() throws IOException {
-
-        // open the file and add a new item to the file
-        Path contactsPath = Paths.get(directory, filename);
-
-        // if the file does not exist, then create it
-        if(Files.notExists(contactsPath)) {
-            Files.createFile(contactsPath); // similar to "touch" on the cli
-        }
-
-//         assigns lines to hold all of the strings already in the file
         List<String> lines = Files.readAllLines(Paths.get(directory, filename));
 
         String name = input.getString("What is the new contact's name?");
@@ -164,8 +145,7 @@ public class ContactsManager {
 
         Contact person = new Contact(name, number);
         contactList.put(name, person);
-        Files.write(contactsPath, lines);
-
+        saveList();
         menu();
     } // End of addNewContact()
 
@@ -186,6 +166,22 @@ public class ContactsManager {
             }
 //        System.out.println(contactList);
             return contactList;
-
     } // End of buildHashMap()
+
+    public static void saveList() throws IOException{
+        Path contactsPath = Paths.get(directory, filename);
+
+        // if the file does not exist, then create it
+        if(Files.notExists(contactsPath)) {
+            Files.createFile(contactsPath); // similar to "touch" on the cli
+        }
+        List<String> lines = Files.readAllLines(Paths.get(directory, filename));
+        lines.clear();
+        for (String key : contactList.keySet()) {
+        String person = "";
+            person += key + " | " + contactList.get(key).getNumber();
+            lines.add(person);
+
+        } Files.write(contactsPath, lines);
+    }
 }
