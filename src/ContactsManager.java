@@ -161,11 +161,9 @@ public class ContactsManager {
         String name = input.getString("What is the new contact's name?");
         String number = input.getString("What is the new contact's number?");
 
-//        String newContact = name + " | " + number;
-        Contact newContact = new Contact(name, number);
-//        lines.add(newContact);
 
-
+        Contact person = new Contact(name, number);
+        contactList.put(name, person);
         Files.write(contactsPath, lines);
 
         menu();
@@ -176,7 +174,7 @@ public class ContactsManager {
         String number="";
         HashMap<String, Contact> contactList = new HashMap<>();
             for(String line : lines) {
-                System.out.println(line);
+//                System.out.println(line);
                int pipeIndex = line.indexOf("|");
 //                System.out.println(pipeIndex);
                 name = line.substring(0,pipeIndex-1);
