@@ -1,4 +1,5 @@
 import util.Input;
+import util.Contact;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +16,9 @@ public class ContactsManager {
 
     public static void main(String[] args) {
         start();
+//        List<Contact> contactList = new
     }
+
 
     public static void start() {
         System.out.println("Welcome to the Contacts Manager!");
@@ -48,8 +51,7 @@ public class ContactsManager {
                 e.printStackTrace();
             }
 
-        }
-        else if (selection == 3) {
+        } else if (selection == 3) {
 
             try {
                 searchContacts();
@@ -57,7 +59,16 @@ public class ContactsManager {
                 e.printStackTrace();
             }
 
-        }else {
+        }
+        else if (selection == 4) {
+
+            try {
+                removeContacts();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
             System.out.println("Cool, thanks!");
             System.exit(0);
         }
@@ -107,6 +118,39 @@ public class ContactsManager {
         menu();
     }
 
+    public static void removeContacts() throws IOException {
+        boolean keepGoing=false;
+        do {
+            Path contactsPath = Paths.get(directory, filename);
+            List<String> lines = Files.readAllLines(Paths.get(directory, filename));
+            String search = Input.getString("\nWhat contact would you like to remove?\n");
+//            System.out.println(lines);
+            boolean found = false;
+            for (String str : lines) {
+                if (str.trim().contains(search)) {
+                    found = true;
+                    System.out.println(str + "\n");
+                    if(Input.yesNo("Are you sure you want to remove " + str)){
+                        lines.remove(str);
+                        lines = Files.readAllLines(Paths.get(directory, filename));
+                        System.out.println("You have removed " + str);
+                    }
+                }
+            }
+            if (found == false) {
+                System.out.println("Sorry. There is no contact named " + search + ".\n");
+                keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+            }
+
+            if (found == true){
+                keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+            }
+        } while (keepGoing);
+        menu();
+    }
+
+
+
 
     public static void addNewContact() throws IOException {
 
@@ -124,8 +168,9 @@ public class ContactsManager {
         String name = input.getString("What is the new contact's name?");
         String number = input.getString("What is the new contact's number?");
 
-        String newContact = name + " |  " + number;
-        lines.add(newContact);
+//        String newContact = name + " |  " + number;
+        Contact newContact = new Contact(name, number);
+//        lines.add(newContact);
 
 
         Files.write(contactsPath, lines);
