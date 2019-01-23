@@ -80,19 +80,6 @@ public class ContactsManager {
     }
 
     public static void showItems() throws IOException {
-//        // We use Paths.get to get a Java Path object
-//        Path allContacts = Paths.get("src", "contacts.txt");
-//
-//        // .readAllLines returns a List type
-//        List<String> contactsList = Files.readAllLines(allContacts);
-//
-//        System.out.println("Bearded Eagles Contact List:");
-//
-//        for (String item : contactsList) {
-//            System.out.println(item);
-//        }
-
-//        System.out.println(contactList.keySet());
         for (String key : contactList.keySet()) {
             System.out.print((key));
             System.out.print("  |  ");
@@ -104,30 +91,25 @@ public class ContactsManager {
     } // End of showItems()
 
     public static void searchContacts() throws IOException {
-        boolean keepGoing=false;
+        boolean keepGoing = false;
         do {
-            Path contactsPath = Paths.get(directory, filename);
-            List<String> lines = Files.readAllLines(Paths.get(directory, filename));
             String search = Input.getString("\nWhat contact would you like more information on?\n");
-//            System.out.println(lines);
-            boolean found = false;
-            for (String str : lines) {
-                if (str.trim().contains(search)) {
-                    System.out.println(str + "\n");
-                    found = true;
-                }
-            }
-                if (found == false) {
-                    System.out.println("Sorry. There is no contact named " + search + ".\n");
-                    keepGoing = Input.yesNo("\nWould you like to search for another contact?");
-                }
+            if (contactList.containsKey(search)) {
+                Contact result = contactList.get(search);
+                System.out.println("Contact Name: " + search);
+                System.out.println("Phone Number: " + result.getNumber());
 
-            if (found == true){
+                keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+
+            } else {
+                System.out.println("Sorry. You don't have a contact named " + search + ".\n");
                 keepGoing = Input.yesNo("\nWould you like to search for another contact?");
             }
-        } while (keepGoing);
+        }while(keepGoing);
         menu();
-    } // End of searchContacts()
+    }
+
+     // End of searchContacts()
 
     public static void removeContacts() throws IOException {
         boolean keepGoing=false;
