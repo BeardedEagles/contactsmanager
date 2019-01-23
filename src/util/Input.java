@@ -24,12 +24,12 @@ public class Input {
         return getString();
     }
 
-    public boolean yesNo() {
+    public static boolean yesNo() {
         String input = getString();
         return input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes");
     }
 
-    public boolean yesNo(String prompt) {
+    public static boolean yesNo(String prompt) {
         System.out.println(prompt);
         return yesNo();
     }

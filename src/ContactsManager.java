@@ -32,7 +32,7 @@ public class ContactsManager {
         System.out.println("5 - Exit");
         int selection = input.getInt(1, 5);
 
-        if(selection == 1) {
+        if (selection == 1) {
 
             try {
                 showItems();
@@ -40,7 +40,7 @@ public class ContactsManager {
                 e.printStackTrace();
             }
 
-        } else if(selection == 2) {
+        } else if (selection == 2) {
 
             try {
                 addNewContact();
@@ -48,7 +48,16 @@ public class ContactsManager {
                 e.printStackTrace();
             }
 
-        } else {
+        }
+        else if (selection == 3) {
+
+            try {
+                searchContacts();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
             System.out.println("Cool, thanks!");
             System.exit(0);
         }
@@ -64,43 +73,40 @@ public class ContactsManager {
 
         System.out.println("Bearded Eagles Contact List:");
 
-        for(String item : contactsList) {
+        for (String item : contactsList) {
             System.out.println(item);
         }
         System.out.println();
 
         menu();
-
     }
 
-//    public static void addNewContact() throws IOException {
-//
-//        // open the file and add a new item to the file
-//        Path addContact = Paths.get(directory, filename);
-//
-//        // if the file does not exist, then create it
-//        if(Files.notExists(addContact)) {
-//            Files.createFile(addContact); // similar to "touch" on the cli
-//        }
-//
-////         assigns lines to hold all of the strings already in the file
-//        List<String> lines = Files.readAllLines(Paths.get(directory, filename));
-////
-//        String name = (String) Input.getString("Please input the name:");
-//        String number = (String) Input.getString("Please input the phone number: ");
-//        String newContact = name + number;
-////        lines.add(newContact);
-//
-////        Files.write(, lines);
-////        Path Files.write(addContact, lines);
-//
-//            List<String> contactsList = Arrays.asList("Michael Carranza 9564073676" );
-//            contactsList.add(newContact);
-//                Path filepath = Paths.get(directory, filename);
-//                Files.write(filepath, contactsList);
-//
-//        menu();
-//    }
+    public static void searchContacts() throws IOException {
+        boolean keepGoing=false;
+        do {
+            Path contactsPath = Paths.get(directory, filename);
+            List<String> lines = Files.readAllLines(Paths.get(directory, filename));
+            String search = Input.getString("\nWhat contact would you like more information on?\n");
+//            System.out.println(lines);
+            boolean found = false;
+            for (String str : lines) {
+                if (str.trim().contains(search)) {
+                    System.out.println(str + "\n");
+                    found = true;
+                }
+            }
+                if (found == false) {
+                    System.out.println("Sorry. There is no contact named " + search + ".\n");
+                    keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+                }
+
+            if (found == true){
+                keepGoing = Input.yesNo("\nWould you like to search for another contact?");
+            }
+        } while (keepGoing);
+        menu();
+    }
+
 
     public static void addNewContact() throws IOException {
 
