@@ -8,15 +8,18 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ContactsManager {
     static Input input = new Input();
     static String directory = "src";
     static String filename = "contacts.txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Path contactsPath = Paths.get(directory, filename);
+        List<String> lines = Files.readAllLines(Paths.get(directory, filename));
+        buildHashMap(lines);
         start();
-//        List<Contact> contactList = new
     }
 
 
@@ -168,7 +171,7 @@ public class ContactsManager {
         String name = input.getString("What is the new contact's name?");
         String number = input.getString("What is the new contact's number?");
 
-//        String newContact = name + " |  " + number;
+//        String newContact = name + " | " + number;
         Contact newContact = new Contact(name, number);
 //        lines.add(newContact);
 
@@ -176,5 +179,24 @@ public class ContactsManager {
         Files.write(contactsPath, lines);
 
         menu();
+    }
+
+    public static void buildHashMap(List<String> lines){
+        HashMap<String, Contact> contactList = new HashMap<>();
+        String name="";
+        String number="";
+
+            for(String line : lines) {
+                System.out.println(line);
+               int pipeIndex = line.indexOf("|");
+//                System.out.println(pipeIndex);
+                name = line.substring(0,pipeIndex-1);
+//                System.out.println(name);
+                number = line.substring(pipeIndex+2,line.length());
+//                System.out.println(number);
+                Contact person = new Contact(name, number);
+                contactList.put(name, person);
+            }
+//        System.out.println(contactList);
     }
 }
