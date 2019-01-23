@@ -14,11 +14,12 @@ public class ContactsManager {
     static Input input = new Input();
     static String directory = "src";
     static String filename = "contacts.txt";
+        public static HashMap<String, Contact> contactList;
 
     public static void main(String[] args) throws IOException {
         Path contactsPath = Paths.get(directory, filename);
         List<String> lines = Files.readAllLines(Paths.get(directory, filename));
-        buildHashMap(lines);
+        contactList = buildHashMap(lines);
         start();
     }
 
@@ -79,21 +80,28 @@ public class ContactsManager {
     }
 
     public static void showItems() throws IOException {
-        // We use Paths.get to get a Java Path object
-        Path allContacts = Paths.get("src", "contacts.txt");
+//        // We use Paths.get to get a Java Path object
+//        Path allContacts = Paths.get("src", "contacts.txt");
+//
+//        // .readAllLines returns a List type
+//        List<String> contactsList = Files.readAllLines(allContacts);
+//
+//        System.out.println("Bearded Eagles Contact List:");
+//
+//        for (String item : contactsList) {
+//            System.out.println(item);
+//        }
 
-        // .readAllLines returns a List type
-        List<String> contactsList = Files.readAllLines(allContacts);
-
-        System.out.println("Bearded Eagles Contact List:");
-
-        for (String item : contactsList) {
-            System.out.println(item);
+//        System.out.println(contactList.keySet());
+        for (String key : contactList.keySet()) {
+            System.out.print((key));
+            System.out.print("  |  ");
+            System.out.print(contactList.get(key).getNumber());
+            System.out.println();
         }
-        System.out.println();
 
         menu();
-    }
+    } // End of showItems()
 
     public static void searchContacts() throws IOException {
         boolean keepGoing=false;
@@ -119,7 +127,7 @@ public class ContactsManager {
             }
         } while (keepGoing);
         menu();
-    }
+    } // End of searchContacts()
 
     public static void removeContacts() throws IOException {
         boolean keepGoing=false;
@@ -150,7 +158,7 @@ public class ContactsManager {
             }
         } while (keepGoing);
         menu();
-    }
+    } // End of removeContacts()
 
 
 
@@ -179,13 +187,12 @@ public class ContactsManager {
         Files.write(contactsPath, lines);
 
         menu();
-    }
+    } // End of addNewContact()
 
-    public static void buildHashMap(List<String> lines){
-        HashMap<String, Contact> contactList = new HashMap<>();
+    public static HashMap buildHashMap(List<String> lines){
         String name="";
         String number="";
-
+        HashMap<String, Contact> contactList = new HashMap<>();
             for(String line : lines) {
                 System.out.println(line);
                int pipeIndex = line.indexOf("|");
@@ -198,5 +205,7 @@ public class ContactsManager {
                 contactList.put(name, person);
             }
 //        System.out.println(contactList);
-    }
+            return contactList;
+
+    } // End of buildHashMap()
 }
