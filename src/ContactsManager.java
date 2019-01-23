@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Arrays;
 
 public class ContactsManager {
     static Input input = new Input();
@@ -71,25 +73,56 @@ public class ContactsManager {
 
     }
 
+//    public static void addNewContact() throws IOException {
+//
+//        // open the file and add a new item to the file
+//        Path addContact = Paths.get(directory, filename);
+//
+//        // if the file does not exist, then create it
+//        if(Files.notExists(addContact)) {
+//            Files.createFile(addContact); // similar to "touch" on the cli
+//        }
+//
+////         assigns lines to hold all of the strings already in the file
+//        List<String> lines = Files.readAllLines(Paths.get(directory, filename));
+////
+//        String name = (String) Input.getString("Please input the name:");
+//        String number = (String) Input.getString("Please input the phone number: ");
+//        String newContact = name + number;
+////        lines.add(newContact);
+//
+////        Files.write(, lines);
+////        Path Files.write(addContact, lines);
+//
+//            List<String> contactsList = Arrays.asList("Michael Carranza 9564073676" );
+//            contactsList.add(newContact);
+//                Path filepath = Paths.get(directory, filename);
+//                Files.write(filepath, contactsList);
+//
+//        menu();
+//    }
+
     public static void addNewContact() throws IOException {
 
         // open the file and add a new item to the file
-        Path addContact = Paths.get(directory, filename);
+        Path contactsPath = Paths.get(directory, filename);
 
         // if the file does not exist, then create it
-        if(Files.notExists(addContact)) {
-            Files.createFile(addContact); // similar to "touch" on the cli
+        if(Files.notExists(contactsPath)) {
+            Files.createFile(contactsPath); // similar to "touch" on the cli
         }
 
 //         assigns lines to hold all of the strings already in the file
         List<String> lines = Files.readAllLines(Paths.get(directory, filename));
-//
-        String name = (String) Input.getString("Please input the name:");
-        String number = (String) Input.getString("Please input the phone number: ");
 
-        lines.add(name, number);
+        String name = input.getString("What is the new contact's name?");
+        String number = input.getString("What is the new contact's number?");
 
-        Files.write(, lines);
+        String newContact = name + " |  " + number;
+        lines.add(newContact);
+
+
+        Files.write(contactsPath, lines);
 
         menu();
     }
